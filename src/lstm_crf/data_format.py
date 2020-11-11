@@ -1,6 +1,10 @@
 # -*- coding:utf-8 -*-
 
 import torch
+import sys
+sys.path.append('/workspace/project_swq/albert_lstm_crf_ner/src')
+sys.path.append('/workspace/project_swq/albert_lstm_crf_ner/src/lstm_crf')
+sys.path.append('/workspace/project_swq/albert_lstm_crf_ner/src/albert')
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler
 from configs.base import config
 from albert.model.tokenization_bert import BertTokenizer

@@ -4,6 +4,9 @@ import yaml
 import sys
 import torch
 import torch.optim as optim
+sys.path.append('/workspace/project_swq/albert_lstm_crf_ner/src')
+sys.path.append('/workspace/project_swq/albert_lstm_crf_ner/src/lstm_crf')
+sys.path.append('/workspace/project_swq/albert_lstm_crf_ner/src/albert')
 from lstm_crf.data_format import DataFormat
 from lstm_crf.model import BiLSTMCRF
 from lstm_crf.utils import f1_score, get_tags, format_result
@@ -95,6 +98,7 @@ class NER(object):
         total_size = self.train_data.train_dataloader.__len__()
         for epoch in range(5):
             index = 0
+            print(sys.getdefaultencoding())
             for batch in self.train_data.train_dataloader:
                 self.model.train()
                 index += 1
@@ -104,7 +108,7 @@ class NER(object):
 
                 bert_encode = self.model(b_input_ids, b_input_mask)
                 loss = self.model.loss_fn(bert_encode=bert_encode, tags=b_labels, output_mask=b_out_masks)
-                progress = ("█" * int(index * 25 / total_size)).ljust(25)
+                progress = ("#" * int(index * 25 / total_size)).ljust(25)
                 print("""epoch [{}] |{}| {}/{}\n\tloss {:.2f}""".format(
                     epoch, progress, index, total_size, loss.item()))
                 loss.backward()
