@@ -190,30 +190,29 @@ class NER(object):
         self.model.to(DEVICE)
         VOCAB = config['albert_vocab_path']  # your path for model and vocab
         tokenizer = BertTokenizer.from_pretrained(VOCAB)
-        while True:
-            with torch.no_grad():
-                input_str = input("请输入文本: ")
-                input_ids = tokenizer.encode(input_str,add_special_tokens=True)  # add_spicial_tokens=True，为自动为sentence加上[CLS]和[SEP]
-                input_mask = [1] * len(input_ids)
-                output_mask = [0] + [1] * (len(input_ids) - 2) + [0]  # 用于屏蔽特殊token
+        with torch.no_grad():
+            #input_str = input("请输入文本: ")
+            input_ids = tokenizer.encode(input_str,add_special_tokens=True)  # add_spicial_tokens=True，为自动为sentence加上[CLS]和[SEP]
+            input_mask = [1] * len(input_ids)
+            output_mask = [0] + [1] * (len(input_ids) - 2) + [0]  # 用于屏蔽特殊token
 
-                input_ids_tensor = torch.LongTensor(input_ids).reshape(1, -1)
-                input_mask_tensor = torch.LongTensor(input_mask).reshape(1, -1)
-                output_mask_tensor = torch.LongTensor(output_mask).reshape(1, -1)
-                input_ids_tensor = input_ids_tensor.to(DEVICE)
-                input_mask_tensor = input_mask_tensor.to(DEVICE)
-                output_mask_tensor = output_mask_tensor.to(DEVICE)
+            input_ids_tensor = torch.LongTensor(input_ids).reshape(1, -1)
+            input_mask_tensor = torch.LongTensor(input_mask).reshape(1, -1)
+            output_mask_tensor = torch.LongTensor(output_mask).reshape(1, -1)
+            input_ids_tensor = input_ids_tensor.to(DEVICE)
+            input_mask_tensor = input_mask_tensor.to(DEVICE)
+            output_mask_tensor = output_mask_tensor.to(DEVICE)
 
-                bert_encode = self.model(input_ids_tensor, input_mask_tensor)
-                predicts = self.model.predict(bert_encode, output_mask_tensor)
+            bert_encode = self.model(input_ids_tensor, input_mask_tensor)
+            predicts = self.model.predict(bert_encode, output_mask_tensor)
 
-                #print('paths:{}'.format(predicts))
-                entities = []
-                for tag in self.tags:
-                    tags = get_tags(predicts[0], tag, self.model.tag_map)
-                    entities += format_result(tags, input_str, tag)
-                print(entities)
-                return entities
+            #print('paths:{}'.format(predicts))
+            entities = []
+            for tag in self.tags:
+                tags = get_tags(predicts[0], tag, self.model.tag_map)
+                entities += format_result(tags, input_str, tag)
+            print(entities)
+            return entities
 
 if __name__ == "__main__":
     if sys.argv[1] == "train":
