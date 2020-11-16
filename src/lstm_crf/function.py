@@ -213,6 +213,7 @@ class NER(object):
                     tags = get_tags(predicts[0], tag, self.model.tag_map)
                     entities += format_result(tags, input_str, tag)
                 print(entities)
+                return entities
 
 if __name__ == "__main__":
     if sys.argv[1] == "train":
