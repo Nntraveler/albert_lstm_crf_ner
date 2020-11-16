@@ -207,7 +207,7 @@ class NER(object):
                 bert_encode = self.model(input_ids_tensor, input_mask_tensor)
                 predicts = self.model.predict(bert_encode, output_mask_tensor)
 
-                print('paths:{}'.format(predicts))
+                #print('paths:{}'.format(predicts))
                 entities = []
                 for tag in self.tags:
                     tags = get_tags(predicts[0], tag, self.model.tag_map)
@@ -220,4 +220,4 @@ if __name__ == "__main__":
         ner.train()
     elif sys.argv[1] == "predict":
         ner = NER("predict")
-        print(ner.predict())
+        ner.predict()
