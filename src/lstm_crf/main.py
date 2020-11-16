@@ -1,4 +1,4 @@
-import lstm_crf.function
+import function
 
 from fastapi import FastAPI
 
@@ -11,11 +11,11 @@ def read_root():
 
 @app.get("/chineseNER/{item_str}")
 def read_item(item_str: str):
-    ner = NER("predict")
+    ner = function.NER("predict")
     print(ner.predict(item_str))
     return {"item_str": item_str}
 
 def test_predict(item_str: str):
-    ner = NER("predict")
-    print(ner.predit(item_str))
+    ner = function.NER("predict")
+    print(ner.predict(item_str))
     
