@@ -45,7 +45,7 @@ class NER(object):
 
     def load_config(self):
         try:
-            fopen = open("models/config.yml")
+            fopen = open("/workspace/project_swq/albert_lstm_crf_ner/src/lstm_crf/models/config.yml")
             config = yaml.load(fopen)
             fopen.close()
         except Exception as error:

@@ -1,6 +1,6 @@
 from pathlib import Path
 import os
-BASE_DIR = os.path.abspath(os.path.dirname(os.getcwd()))
+BASE_DIR = '/workspace/project_swq/albert_lstm_crf_ner/src'
 BASE_DIR += '/albert'
 config = {
 
