@@ -12,8 +12,8 @@ def read_root():
 @app.get("/chineseNER/{item_str}")
 def read_item(item_str: str):
     ner = function.NER("predict")
-    print(ner.predict(item_str))
-    return {"item_str": item_str}
+    entities = ner.predict(item_str)
+    return entities
 
 def test_predict(item_str: str):
     ner = function.NER("predict")

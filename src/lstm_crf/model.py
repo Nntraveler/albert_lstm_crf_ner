@@ -24,15 +24,10 @@ class BiLSTMCRF(nn.Module):
 
     def __init__(
             self,
-            tag_map={ 'B_T': 0,
-                   'I_T': 1,
-                   'B_LOC': 2,
-                   'I_LOC': 3,
-                   'B_ORG': 4,
-                   'I_ORG': 5,
-                   'B_PER': 6,
-                   'I_PER': 7,
-                        'O': 8},
+            tag_map={ 
+                   'B_x': 0,
+                   'I_x': 1,
+                        'O': 2},
             batch_size=20,
             hidden_dim=128,
             dropout=1.0,

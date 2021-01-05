@@ -26,15 +26,10 @@ class DataFormat():
         self.max_length = max_length
         self.data_type = data_type
         self.train_data = []
-        self.tag_map = {'B_T': 0,
-                   'I_T': 1,
-                   'B_LOC': 2,
-                   'I_LOC': 3,
-                   'B_ORG': 4,
-                   'I_ORG': 5,
-                   'B_PER': 6,
-                   'I_PER': 7,
-                        'O': 8}
+        self.tag_map = {
+                   'B_x': 0,
+                   'I_x': 1,
+                        'O': 2}
         base_path = os.path.abspath(os.path.join(os.getcwd(), "../.."))
         if data_type == "train":
             self.data_path = base_path + '/data/ner_data/train/'
@@ -72,7 +67,6 @@ class DataFormat():
                     # token -> index
                     tokenized_text = tokenizer.tokenize(tokens_cs)  # 用tokenizer对句子分词
                     input_ids = tokenizer.convert_tokens_to_ids(tokenized_text)  # 索引列表
-
                     # tag -> index 这里没有对label_ids加[CLS]和[SEP]
                     label_ids = [label_dic[i] for i in label_cs.split()]
                     input_mask = [1] * len(input_ids)

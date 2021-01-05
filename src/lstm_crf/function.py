@@ -4,9 +4,9 @@ import yaml
 import sys
 import torch
 import torch.optim as optim
-sys.path.append('/workspace/project_swq/albert_lstm_crf_ner/src')
-sys.path.append('/workspace/project_swq/albert_lstm_crf_ner/src/lstm_crf')
-sys.path.append('/workspace/project_swq/albert_lstm_crf_ner/src/albert')
+sys.path.append('/workspace/project_swq/tumu_part/albert_lstm_crf_ner/src')
+sys.path.append('/workspace/project_swq/tumu_part/albert_lstm_crf_ner/src/lstm_crf')
+sys.path.append('/workspace/project_swq/tumu_part/albert_lstm_crf_ner/src/albert')
 from lstm_crf.data_format import DataFormat
 from lstm_crf.model import BiLSTMCRF
 from lstm_crf.utils import f1_score, get_tags, format_result
@@ -35,6 +35,20 @@ class NER(object):
             )
             self.restore_model()
 
+        elif exec_type == "eval":
+            self.train_data = DataFormat(batch_size=self.batch_size, max_length=self.max_legnth, data_type='train')
+            self.dev_data = DataFormat(batch_size=16, max_length=self.max_legnth, data_type="dev")
+
+            self.model = BiLSTMCRF(
+                tag_map=self.train_data.tag_map,
+                batch_size=self.batch_size,
+                dropout=self.dropout,
+                embedding_dim=self.embedding_size,
+                hidden_dim=self.hidden_size,
+            )
+            self.restore_model()
+
+
         elif exec_type == "predict":
             self.model = BiLSTMCRF(
                 dropout=self.dropout,
@@ -45,7 +59,7 @@ class NER(object):
 
     def load_config(self):
         try:
-            fopen = open("/workspace/project_swq/albert_lstm_crf_ner/src/lstm_crf/models/config.yml")
+            fopen = open("models/config.yml")
             config = yaml.load(fopen)
             fopen.close()
         except Exception as error:
@@ -96,7 +110,7 @@ class NER(object):
         '''
         # schedule = ReduceLROnPlateau(optimizer=optimizer, mode='min',factor=0.1,patience=100,verbose=False)
         total_size = self.train_data.train_dataloader.__len__()
-        for epoch in range(5):
+        for epoch in range(10):
             index = 0
             print(sys.getdefaultencoding())
             for batch in self.train_data.train_dataloader:
@@ -115,10 +129,12 @@ class NER(object):
                 # torch.nn.utils.clip_grad_norm_(self.model.parameters(),1) #梯度裁剪
                 optimizer.step()
                 # schedule.step(loss)
-                if index % 100 == 0:
+                if index % 10 == 0:
                     self.eval_2()
                     print("-" * 50)
         torch.save(self.model.state_dict(), self.model_path + 'params.pkl')
+        self.eval_2()
+        print("-" * 50)
 
     def eva1_1(self):
         '''
@@ -221,3 +237,7 @@ if __name__ == "__main__":
     elif sys.argv[1] == "predict":
         ner = NER("predict")
         ner.predict()
+    elif sys.argv[1] == "eval":
+        ner = NER("eval")
+        ner.eval_2()
+
